@@ -12,9 +12,20 @@
         "vite": "^5.0"
     },
     "dependencies": {
+        "@chakra-ui/icons": "^2.1.1",
+        "@chakra-ui/react": "^2.8.2",
+        "@emotion/react": "^11.13.0",
+        "@emotion/styled": "^11.13.0",
         "@inertiajs/inertia-react": "^0.8.1",
         "@inertiajs/react": "^1.2.0",
+        "dayjs": "^1.11.12",
+        "iso8601-duration": "^2.1.2",
+        "lodash": "^4.17.21",
         "react": "^18.3.1",
-        "react-dom": "^18.3.1"
+        "react-dom": "^18.3.1",
+        "react-hook-form": "^7.52.2",
+        "react-hotkeys-hook": "^4.5.0",
+        "react-spinners": "^0.14.1",
+        "zustand": "^4.5.4"
     }
 }
