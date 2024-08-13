@@ -7,22 +7,24 @@ use Carbon\Carbon;
 use Inertia\Inertia;
 use App\Facades\Streamers;
 use Illuminate\Support\Facades\Log;
+use App\Services\VideoService;
 
 Route::get('/', function () {
     return Inertia::render('Welcome');
 });
 
-Route::get('/random', function (Request $request) {
-    Log::debug($request);
+Route::get('/random', function (Request $request, VideoService $videoService) {
     $channels = $request->input('channels', []);
     $strategy = $request->input('strategy', 'by_duration');
     $count = $request->input('count');
     $dateLow = $request->input('dateLow', '1970-01-01');
     $dateHigh = $request->input('dateHigh', Carbon::now()->format('Y-m-d'));
 
-    $streamerConfig = app('streamers')::first(function ($s) use ($request) {
-        return in_array($request->input('streamer'), $s->supportedRoutes);
-    });
+    $streamers = app('streamers');
+
+    // find the object in the streamers that matches the route
+    // streamers is an array of objects
+    $streamerConfig = collect($streamers)->firstWhere('route', $request->input('streamer'));
 
     if (!$streamerConfig) {
         $errMessage = "'streamer' is required. Supported streamers: " . implode(', ', app('streamers')::pluck('route')->toArray());
@@ -34,7 +36,7 @@ Route::get('/random', function (Request $request) {
     }
     $channels = array_unique($channels);
     $channels = array_filter($channels, function ($channel) use ($streamerConfig) {
-        return $streamerConfig->channels->contains('channelId', $channel);
+        return collect($streamerConfig['channels'])->contains('channelId', $channel);
     });
 
     $count = $count ? max(1, min(10, (int)$count)) : 1;
@@ -44,13 +46,9 @@ Route::get('/random', function (Request $request) {
     Log::debug("");
     $startTime = microtime(true);
 
-    $streamerRoute = $streamerConfig->route;
-    $streamer = Connections::get($streamerRoute);
+    $streamerRoute = $streamerConfig['route'];
 
-    $videos = $streamer->randomVideos($channels, $strategy, $count, [
-        'dateLow' => $dateLow,
-        'dateHigh' => $dateHigh,
-    ]);
+    $videos = $videoService->randomVideos($streamerRoute, $channels, $strategy, $count, $dateLow, $dateHigh);
 
     $responseFields = [
         'channelId',
@@ -64,8 +62,8 @@ Route::get('/random', function (Request $request) {
     ];
 
     $response = array_map(function ($video) use ($responseFields) {
-        return Arr::only($video, $responseFields);
-    }, $videos);
+        return Arr::only((array)$video, $responseFields);
+    }, (array)$videos);
 
     $endTime = microtime(true);
     Log::debug("$timerLabel: " . ($endTime - $startTime) . ' seconds');

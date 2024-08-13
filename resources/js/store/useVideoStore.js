@@ -10,7 +10,7 @@ function buildURL({ streamer, settings }) {
   if (settings.dateHigh) params.push(`dateHigh=${settings.dateHigh}`);
   const channelIds = settings.channels[streamer];
   if (channelIds?.length > 0)
-    channelIds.forEach((id) => params.push(`channels=${id}`));
+    channelIds.forEach((id) => params.push(`channels[]=${id}`));
 
   return `${base}?${params.join("&")}`;
 }
