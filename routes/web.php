@@ -80,4 +80,4 @@ Route::get('/{streamer}', function ($streamer) {
             'channelId' => 'UCK3kaNXbB57CLcyhtccV_yw',
         ]]
     ]);
-});
+})->name('streamer');
