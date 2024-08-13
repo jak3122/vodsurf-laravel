@@ -1,4 +1,4 @@
-import Stats from "@//Components/Stats";
+import Stats from "@/Components/Stats";
 import Providers from "@/Layouts/Providers";
 import { Flex } from "@chakra-ui/react";
 import useStreamer from "@/hooks/useStreamer";
