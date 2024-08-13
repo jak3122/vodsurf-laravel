@@ -33,20 +33,10 @@ class YoutubeService
 
     public function getVideos($channel, $pageToken = null)
     {
-        print_r($channel);
-        $params = [
-            'type' => 'video',
-            'part' => 'id,snippet',
-            'channelId' => $channel['id'],
-            'maxResults' => 50,
-        ];
+        $maxResults = 50;
+        $part = ['id', 'snippet', 'contentDetails'];
 
-        if ($pageToken) {
-            $params['pageToken'] = $pageToken;
-        }
-
-        $response = Youtube::getPlaylistItemsByPlaylistId($channel['uploadsPlaylist'], $params);
-        print_r($response);
+        $response = Youtube::getPlaylistItemsByPlaylistId($channel['uploadsPlaylist'], $pageToken, $maxResults, $part);
 
         return [
             'nextPageToken' => $response['info']['nextPageToken'] ?? null,

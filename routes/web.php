@@ -66,7 +66,7 @@ Route::get('/random', function (Request $request, VideoService $videoService) {
     }, (array)$videos);
 
     $endTime = microtime(true);
-    Log::debug("$timerLabel: " . ($endTime - $startTime) . ' seconds');
+    Log::debug("$timerLabel: " . ($endTime - $startTime) * 1000 . ' ms');
 
     return response()->json($response);
 });

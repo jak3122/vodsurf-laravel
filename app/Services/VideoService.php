@@ -4,6 +4,11 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
 
+function randomFloat($max)
+{
+    return mt_rand() / mt_getrandmax() * $max;
+}
+
 class VideoService
 {
     public function allChannelIds(String $streamer)
@@ -41,8 +46,10 @@ class VideoService
                 break;
         }
 
+        $select = $column ? "id, $column" : 'id';
+
         $videos = DB::table('videos')
-            ->select('id', $column)
+            ->select(DB::raw($select))
             ->whereIn('channelId', $channels)
             ->whereBetween('publishedAt', [$dateLow, $dateHigh])
             ->get();
@@ -77,7 +84,7 @@ class VideoService
         $tempItems = $videos->toArray();
 
         for ($i = 0; $i < $count && count($tempItems) > 0; $i++) {
-            $rand = rand(0, $totalWeight);
+            $rand = randomFloat($totalWeight);
             $cumulativeWeight = 0;
             $selectedItem = null;
             foreach ($tempItems as $index => $item) {

@@ -24,7 +24,7 @@ class SyncVideos extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Sync the database from YouTube';
 
     /**
      * Execute the console command.
@@ -64,8 +64,11 @@ class SyncVideos extends Command
         $addedVideos = 0;
 
         while (true) {
-            [$videos, $nextPageToken] = array_values($youtubeService->getChannelVideos($channelDetails, $pageToken));
-            print_r($videos);
+            print_r("fetching page with pageToken: $pageToken\n");
+            $returned = array_values($youtubeService->getChannelVideos($channelDetails, $pageToken));
+            $videos = $returned[0];
+            $nextPageToken = $returned[1];
+            print_r("next page token:" . $nextPageToken . "\n");
 
             // filter out videos with a zero or non-numeric viewCount,
             // and based on videoTitleFilter
@@ -88,7 +91,7 @@ class SyncVideos extends Command
             $pageToken = $nextPageToken;
 
             // Stop criteria
-            if ($addedVideos < 50) {
+            if ($addedVideos < 50 || !$nextPageToken) {
                 break;
             }
         }
