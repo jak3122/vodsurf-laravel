@@ -3,7 +3,7 @@ import Providers from "@/Layouts/Providers";
 import { Flex } from "@chakra-ui/react";
 import useStreamer from "@/hooks/useStreamer";
 import Header from "@/Components/Header";
-import Content from "@/Components/content";
+import Content from "@/Components/Content";
 
 export default function Streamer({ stats }) {
   const streamer = useStreamer();
