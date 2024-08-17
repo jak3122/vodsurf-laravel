@@ -23,7 +23,6 @@ if [ $# -gt 0 ]; then
     fi
 else
     chown -R sail:$WWWGROUP /var/www/html
-    chmod -R 775 /var/www/html/storage
-    chmod -R 775 /var/www/html/bootstrap/cache
+    chmod -R 775 /var/www/html
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 fi
