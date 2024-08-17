@@ -63,8 +63,6 @@ COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY php.ini /etc/php/8.3/cli/conf.d/99-sail.ini
 RUN chmod +x /usr/local/bin/start-container
 
-RUN php /var/www/html/artisan migrate:fresh
-
 EXPOSE 80/tcp
 
 ENTRYPOINT ["start-container"]

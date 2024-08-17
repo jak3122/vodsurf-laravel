@@ -26,3 +26,5 @@ else
     chmod -R 775 /var/www/html
     exec /usr/bin/supervisord -c /etc/supervisor/conf.d/supervisord.conf
 fi
+
+php /var/www/html/artisan migrate:fresh
